@@ -20,6 +20,7 @@ require 'fileutils'
 require 'java_buildpack/container/tomcat'
 require 'java_buildpack/container/tomcat/tomcat_insight_support'
 require 'java_buildpack/container/tomcat/tomcat_instance'
+require 'java_buildpack/container/tomcat/tomcat_http_connector'
 require 'java_buildpack/container/tomcat/tomcat_lifecycle_support'
 require 'java_buildpack/container/tomcat/tomcat_logging_support'
 require 'java_buildpack/container/tomcat/tomcat_access_logging_support'
@@ -32,6 +33,7 @@ describe JavaBuildpack::Container::Tomcat do
 
   let(:configuration) do
     { 'tomcat'                 => tomcat_configuration,
+      'http_connector'         => http_connector_configuration,
       'lifecycle_support'      => lifecycle_support_configuration,
       'logging_support'        => logging_support_configuration,
       'access_logging_support' => access_logging_support_configuration,
@@ -39,6 +41,8 @@ describe JavaBuildpack::Container::Tomcat do
   end
 
   let(:tomcat_configuration) { double('tomcat-configuration') }
+
+  let(:http_connector_configuration) { double('http_connector_configuration') }
 
   let(:lifecycle_support_configuration) { double('lifecycle-support-configuration') }
 
@@ -69,6 +73,8 @@ describe JavaBuildpack::Container::Tomcat do
   it 'creates submodules' do
     expect(JavaBuildpack::Container::TomcatInstance)
       .to receive(:new).with(sub_configuration_context(tomcat_configuration))
+    expect(JavaBuildpack::Container::TomcatHttpConnector)
+      .to receive(:new).with(sub_configuration_context(http_connector_configuration))
     expect(JavaBuildpack::Container::TomcatLifecycleSupport)
       .to receive(:new).with(sub_configuration_context(lifecycle_support_configuration))
     expect(JavaBuildpack::Container::TomcatLoggingSupport)
